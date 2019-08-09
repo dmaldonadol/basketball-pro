@@ -1,23 +1,24 @@
 package cl.grupo.maldonado.app.basket.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import cl.grupo.maldonado.app.basket.core.Coach;
 import cl.grupo.maldonado.app.basket.core.Player;
 import cl.grupo.maldonado.app.basket.core.Team;
 import cl.grupo.maldonado.app.basket.core.championship.Championship;
 import cl.grupo.maldonado.app.basket.core.championship.ChampionshipState;
 import cl.grupo.maldonado.app.basket.core.championship.ChampionshipTeam;
 import cl.grupo.maldonado.app.basket.repositories.ChampionshipTeamRepository;
+import cl.grupo.maldonado.app.basket.repositories.CoachRepository;
 import cl.grupo.maldonado.app.basket.repositories.PlayerRepository;
 import cl.grupo.maldonado.app.basket.repositories.TeamRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class TeamService {
@@ -32,6 +33,9 @@ public class TeamService {
     @Autowired
     private PlayerRepository playerRepository;
 
+    @Autowired
+    private CoachRepository coachRepository;
+
 
 
     /**
@@ -39,7 +43,12 @@ public class TeamService {
      */
     public void save( Team team ){
         team.setPlayers( new ArrayList<>() );
+        Coach coach = new Coach();
+        coach.setName(team.getCoach().getName());
+        coach.setLastName(team.getCoach().getLastName());
+        team.setCoach(null);
         repository.save(team);
+        coachRepository.save(coach);
     }
 
 
